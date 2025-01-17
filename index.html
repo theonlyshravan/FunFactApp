@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Fun Fact Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-100: #ff8c42;
+            --primary-200: #ffab75;
+            --primary-300: #ffcaa8;
+            --accent-100: #9acd32;
+            --accent-200: #9acd32;
+            --accent-300: #9acd32;
+            --background-100: #fffdfd;
+            --background-200: #ffe3e3;
+            --background-300: #ffcaca;
+            --text-100: #2a170b;
+            --text-200: #522d16;
+            --text-300: #7b4320;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, var(--primary-100), var(--primary-200), var(--background-100));
+            color: var(--text-100);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+    
+        .main-container {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    
+        .container {
+            background-color: var(--background-300); 
+            padding: 40px; 
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); 
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+            backdrop-filter: blur(10px);
+            flex: 0 1 500px; 
+            opacity: 0.95; 
+        }
+    
+        h1 {
+            font-family: "Berkshire Swash", serif;
+            font-weight: 400;
+            font-style: normal;
+            color: var(--text-300); 
+        }
+    
+        .fact-section {
+            background-color: var(--background-300);
+            padding: 40px; 
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+            backdrop-filter: blur(10px); 
+            flex: 0 1 500px; 
+            opacity: 0.95; 
+        }
+    
+        #funFact {
+            font-family: "Henny Penny", serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 1.2em;
+            margin-bottom: 0;
+            animation: slideUp 0.5s ease-in-out;
+            color: var(--text-300);
+        }
+    
+        button {
+            background: #d48f3d;  /* Base color */
+            border: none;
+            padding: 10px 20px;
+            display: inline-block;
+            font-size: 15px;
+            font-weight: 600;
+            width: 120px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transform: skew(-21deg);
+            position: relative;
+            margin: 10px;
+            color: var(--text-100); 
+        }
+    
+        button span {
+            display: inline-block;
+            transform: skew(21deg);
+        }
+    
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 100%;
+            left: 0;
+            background: #995c1d;  /* Hover color */
+            opacity: 0;
+            z-index: -1;
+            transition: all 0.5s;
+        }
+    
+        button:hover {
+            color: #fff; 
+        }
+    
+        button:hover::before {
+            left: 0;
+            right: 0;
+            opacity: 1;
+        }
+    
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            color: var(--text-100); 
+        }
+    
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="container">
+            <h1>Random Fun Fact Generator</h1>
+            <button id="generateButton">
+                <span>Generate</span>
+            </button>
+            <input type="text" id="newFactInput" placeholder="Add your own fun fact">
+            <button id="addButton">
+                <span>Add Fact</span>
+            </button>
+        </div>
+        <div class="fact-section">
+            <p id="funFact"></p>
+        </div>
+    </div>
+    <script>
+        const generateButton = document.getElementById('generateButton');
+        const addButton = document.getElementById('addButton');
+        const funFact = document.getElementById('funFact');
+        const newFactInput = document.getElementById('newFactInput');
+    
+        let funFacts = [
+            'The longest word in the English language is "pneumonoultramicroscopicsilicovolcanoconiosis".',
+            'A group of flamingos is called a flamboyance.',
+            'There are more trees on Earth than stars in the Milky Way galaxy.',
+            'The average person spends six months of their life waiting at red lights.',
+            'A day on Venus is longer than a year on Venus.',
+            'Astronauts cannot cry in space because there is no gravity to pull tears down their face.',
+            'The human body contains enough iron to make a small nail.',
+            'The first product to have a bar code was Wrigley\'s gum.',
+            'The Mona Lisa has no eyebrows.',
+            'The Eiffel Tower was originally meant to be built in Barcelona, Spain.',
+            'The world\'s largest shopping mall is the Dubai Mall.'
+        ];
+    
+        function generateRandomFact() {
+            const randomIndex = Math.floor(Math.random() * funFacts.length);
+            funFact.textContent = funFacts[randomIndex];
+        }
+    
+        generateButton.addEventListener('click', generateRandomFact);
+    
+        addButton.addEventListener('click', () => {
+            const newFact = newFactInput.value.trim();
+            if (newFact !== "") {
+                funFacts.push(newFact);
+                newFactInput.value = ""; 
+                generateRandomFact(); 
+            }
+        });
+    
+        generateRandomFact(); 
+    </script>
+</body>
+</html>
+
